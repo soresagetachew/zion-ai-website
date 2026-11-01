@@ -1,0 +1,20 @@
+{
+  "name": "zion-ai-website",
+  "version": "1.0.0",
+  "description": "Zion AI - Voice Agent for Ethiopian Businesses (Amharic, Afaan Oromoo, Tigrigna, Kiswahili, Somali)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "zion-ai",
+    "ethiopia",
+    "amharic",
+    "voice-ai",
+    "framer",
+    "callwave"
+  ],
+  "author": "Zion AI (ceo@zionsoftwareagency.com)",
+  "license": "ISC"
+}
