@@ -92,40 +92,8 @@ html body { background: rgb(255, 255, 255); }
   border-color: var(--token-b901f6e4-f740-40cd-981a-9eb36c5d7b0e) !important;
 }
 
-.bank-grid-card {
-  cursor: pointer;
-  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease, opacity 200ms ease;
-}
-
-.bank-grid-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(21, 62, 53, 0.08) !important;
-  border-color: var(--token-b901f6e4-f740-40cd-981a-9eb36c5d7b0e) !important;
-}
-
-.bank-filter-btn {
-  outline: none;
-}
-
-.bank-filter-btn:hover {
-  border-color: var(--token-b901f6e4-f740-40cd-981a-9eb36c5d7b0e) !important;
-}
-
 @media (max-width: 768px) {
   .ethiopian-banking-section {
-    padding: 40px 16px 60px 16px !important;
-  }
-  .bank-grid-showcase {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 12px !important;
-  }
-  .bank-grid-card {
-    padding: 18px 12px !important;
-    min-height: 160px !important;
-  }
-  .bank-filter-group {
-    width: 100%;
-    overflow-x: auto;
-    padding-bottom: 8px;
+    padding: 40px 16px 50px 16px !important;
   }
 }

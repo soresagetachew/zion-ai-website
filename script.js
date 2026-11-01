@@ -394,44 +394,4 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-
-  // 8. Ethiopian Bank Directory Filtering
-  const filterBtns = document.querySelectorAll('.bank-filter-btn');
-  const bankCards = document.querySelectorAll('.bank-grid-card');
-
-  filterBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => {
-        b.style.background = '#ffffff';
-        b.style.color = 'var(--token-b901f6e4-f740-40cd-981a-9eb36c5d7b0e)';
-        b.style.borderColor = 'var(--token-392be854-8b5f-489e-a96f-51d2c06d3419)';
-        b.classList.remove('active');
-      });
-
-      btn.style.background = 'var(--token-b901f6e4-f740-40cd-981a-9eb36c5d7b0e)';
-      btn.style.color = '#ffffff';
-      btn.style.borderColor = 'var(--token-b901f6e4-f740-40cd-981a-9eb36c5d7b0e)';
-      btn.classList.add('active');
-
-      const filter = btn.getAttribute('data-filter');
-
-      bankCards.forEach((card) => {
-        const cat = card.getAttribute('data-bank-cat');
-        if (filter === 'all' || cat === filter) {
-          card.style.display = 'flex';
-          setTimeout(() => {
-            card.style.opacity = '1';
-            card.style.transform = 'scale(1)';
-          }, 10);
-        } else {
-          card.style.opacity = '0';
-          card.style.transform = 'scale(0.96)';
-          setTimeout(() => {
-            card.style.display = 'none';
-          }, 180);
-        }
-      });
-      if (typeof playTone === 'function') playTone(580, 0.08, 'sine', 0.03);
-    });
-  });
 });
