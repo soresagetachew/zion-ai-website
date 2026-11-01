@@ -303,9 +303,13 @@ document.addEventListener('DOMContentLoaded', () => {
           <img src="assets/images/zion-ai-logo.png" alt="Zion AI" style="height: 32px; width: auto; border-radius: 4px;">
         </div>
         <h3 style="font-family: 'Instrument Serif', serif; font-size: 32px; margin: 0 0 8px 0; color: #153e35;">Book a Demo in Addis Ababa</h3>
-        <p style="font-size: 14px; color: #587064; margin: 0 0 24px 0; line-height: 1.5;">
+        <p style="font-size: 14px; color: #587064; margin: 0 0 16px 0; line-height: 1.5;">
           Experience Zion AI on your actual business phone line. We will configure a live Amharic & English test number for your clinic or company in 15 minutes.
         </p>
+        <div style="background: rgba(21, 62, 53, 0.06); border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; font-size: 13px;">
+          <span style="color: #587064; font-weight: 600;">Direct Phone Line:</span>
+          <a href="tel:+251994575145" style="color: #153e35; font-weight: 800; text-decoration: none; font-size: 15px; letter-spacing: 0.02em;">+251994575145</a>
+        </div>
         <form id="demo-form" style="display: flex; flex-direction: column; gap: 16px;">
           <div>
             <label style="display: block; font-size: 12px; font-weight: 700; color: #153e35; margin-bottom: 6px; text-transform: uppercase;">Company / Clinic Name</label>
@@ -331,7 +335,8 @@ document.addEventListener('DOMContentLoaded', () => {
         <div id="demo-success" style="display: none; text-align: center; padding: 24px 0;">
           <div style="font-size: 40px; margin-bottom: 12px;">✅</div>
           <h4 style="font-family: 'Instrument Serif', serif; font-size: 28px; margin: 0 0 8px 0; color: #153e35;">Your Demo Is Booked!</h4>
-          <p style="font-size: 14px; color: #587064; margin: 0;">Our Addis Ababa team will call your +251 number within 2 hours with your custom test line.</p>
+          <p style="font-size: 14px; color: #587064; margin: 0 0 10px 0;">Our Addis Ababa team will call your number within 2 hours with your custom test line.</p>
+          <p style="font-size: 13px; color: #153e35; margin: 0;">Or call us directly anytime: <a href="tel:+251994575145" style="color: #153e35; font-weight: 800; text-decoration: underline;">+251994575145</a></p>
         </div>
       </div>
     `;
