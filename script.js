@@ -1,4 +1,4 @@
-// CallWave Interactive Enhancements
+// Zion AI - Interactive Enhancements & Audio Simulation
 
 document.addEventListener('DOMContentLoaded', () => {
   // 1. FAQ Accordion Toggle
@@ -56,7 +56,39 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 2. Call Players Simulation
+  // 2. Sound generation using Web Audio API for interactive audio playback
+  let audioCtx = null;
+  function getAudioContext() {
+    if (!audioCtx) {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (AudioContext) audioCtx = new AudioContext();
+    }
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    return audioCtx;
+  }
+
+  function playTone(freq, duration, type = 'sine', gainVal = 0.04) {
+    try {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      gain.gain.setValueAtTime(gainVal, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + duration);
+    } catch (e) {
+      // Audio autoplay policy fallback
+    }
+  }
+
+  // 3. Call Players Simulation
   let currentlyPlaying = null;
 
   const playSvg = `<svg width="23.52" height="23.52" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.52.85l10.4-6.5a1 1 0 0 0 0-1.7L9.52 4.65A1 1 0 0 0 8 5.5Z" fill="currentColor"></path></svg>`;
@@ -80,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const timeLabel = timeLabels[0];
     const progressBar = player.querySelector('div[aria-hidden="true"] > div');
     const speedBtn = player.querySelector('button[aria-label^="Playback speed"]');
+    const transcriptItems = player.querySelectorAll('[role="log"] > div, [aria-live="polite"] > div');
 
     function formatTime(sec) {
       const m = Math.floor(sec / 60);
@@ -99,6 +132,28 @@ document.addEventListener('DOMContentLoaded', () => {
         slider.setAttribute('aria-valuenow', Math.floor(currentTime).toString());
         slider.setAttribute('aria-valuetext', `${formatTime(currentTime)} of ${formatTime(totalDuration)}`);
       }
+
+      // Highlight active speaker transcript row
+      if (transcriptItems.length > 1) {
+        const midPoint = totalDuration / 2;
+        if (currentTime < midPoint) {
+          transcriptItems[0].style.opacity = '1';
+          transcriptItems[0].style.transform = 'scale(1.01)';
+          transcriptItems[0].style.transition = 'all 200ms ease';
+          if (transcriptItems[1]) {
+            transcriptItems[1].style.opacity = '0.45';
+            transcriptItems[1].style.transform = 'none';
+          }
+        } else {
+          transcriptItems[0].style.opacity = '0.45';
+          transcriptItems[0].style.transform = 'none';
+          if (transcriptItems[1]) {
+            transcriptItems[1].style.opacity = '1';
+            transcriptItems[1].style.transform = 'scale(1.01)';
+            transcriptItems[1].style.transition = 'all 200ms ease';
+          }
+        }
+      }
     }
 
     function stop() {
@@ -109,6 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
       playBtn.setAttribute('aria-label', 'Play call');
       playBtn.setAttribute('title', 'Play call');
       if (currentlyPlaying === stop) currentlyPlaying = null;
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
     }
 
     function start() {
@@ -120,6 +176,23 @@ document.addEventListener('DOMContentLoaded', () => {
       playBtn.innerHTML = pauseSvg;
       playBtn.setAttribute('aria-label', 'Pause call');
       playBtn.setAttribute('title', 'Pause call');
+
+      // Play soft initial telephone chime
+      playTone(440, 0.15, 'sine', 0.05);
+      setTimeout(() => playTone(880, 0.25, 'sine', 0.04), 160);
+
+      // Attempt speech synthesis for transcript dialogue if available
+      try {
+        if ('speechSynthesis' in window && transcriptItems.length > 0) {
+          window.speechSynthesis.cancel();
+          const firstSpeakerText = transcriptItems[0].innerText || transcriptItems[0].textContent;
+          if (firstSpeakerText) {
+            const utter = new SpeechSynthesisUtterance(firstSpeakerText.replace(/Zion AI|CallWave/gi, 'Zion AI'));
+            utter.rate = 0.95 * playbackSpeed;
+            window.speechSynthesis.speak(utter);
+          }
+        }
+      } catch (e) {}
 
       const intervalMs = 100;
       timerId = setInterval(() => {
@@ -151,6 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const ratio = Math.max(0, Math.min(1, clickX / rect.width));
         currentTime = ratio * totalDuration;
         updateUI();
+        playTone(520, 0.08, 'triangle', 0.03);
       });
     }
 
@@ -164,16 +238,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         speedBtn.textContent = `${playbackSpeed}×`;
         speedBtn.setAttribute('aria-label', `Playback speed ${playbackSpeed}×`);
+        playTone(660, 0.06, 'sine', 0.03);
       });
     }
   });
 
-  // 3. Brand Logo Ticker continuous animation
+  // 4. Brand Logo Ticker continuous animation
   const tickerContainer = document.querySelector('.framer-t0kthc');
   if (tickerContainer) {
     const tickerUl = tickerContainer.querySelector('ul');
     if (tickerUl) {
-      // Clone children for seamless looping
       const clone = tickerUl.cloneNode(true);
       clone.setAttribute('aria-hidden', 'true');
       tickerContainer.style.overflow = 'hidden';
@@ -199,21 +273,104 @@ document.addEventListener('DOMContentLoaded', () => {
         .framer-t0kthc:hover div {
           animation-play-state: paused !important;
         }
+        .framer-pricing-section a:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
       `;
       document.head.appendChild(style);
     }
   }
 
-  // 4. Smooth Anchor Scrolling for nav links
+  // 5. Booking Modal for Ethiopian Businesses
+  function createDemoModal() {
+    const modalId = 'zion-demo-modal';
+    if (document.getElementById(modalId)) return;
+
+    const modal = document.createElement('div');
+    modal.id = modalId;
+    modal.style.cssText = `
+      position: fixed; inset: 0; background: rgba(21, 62, 53, 0.65);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      z-index: 10000; display: none; align-items: center; justify-content: center;
+      padding: 20px; box-sizing: border-box;
+    `;
+
+    modal.innerHTML = `
+      <div style="background: #faf8f1; border-radius: 28px; border: 1px solid #b5c3b4; padding: 40px; max-width: 520px; width: 100%; box-shadow: 0 24px 64px rgba(0,0,0,0.2); position: relative; font-family: 'Manrope', sans-serif;">
+        <button id="close-modal-btn" style="position: absolute; top: 20px; right: 20px; background: transparent; border: none; font-size: 24px; cursor: pointer; color: #153e35; line-height: 1;">&times;</button>
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+          <img src="assets/images/zion-ai-logo.png" alt="Zion AI" style="height: 32px; width: auto; border-radius: 4px;">
+        </div>
+        <h3 style="font-family: 'Instrument Serif', serif; font-size: 32px; margin: 0 0 8px 0; color: #153e35;">Book a Demo in Addis Ababa</h3>
+        <p style="font-size: 14px; color: #587064; margin: 0 0 24px 0; line-height: 1.5;">
+          Experience Zion AI on your actual business phone line. We will configure a live Amharic & English test number for your clinic or company in 15 minutes.
+        </p>
+        <form id="demo-form" style="display: flex; flex-direction: column; gap: 16px;">
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 700; color: #153e35; margin-bottom: 6px; text-transform: uppercase;">Company / Clinic Name</label>
+            <input type="text" required placeholder="e.g. Lucy Clinic, Sheba Logistics" style="width: 100%; box-sizing: border-box; padding: 12px 16px; border-radius: 12px; border: 1px solid #b5c3b4; background: #fff; font-family: inherit; font-size: 14px; color: #153e35;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 700; color: #153e35; margin-bottom: 6px; text-transform: uppercase;">Ethiopian Phone Number</label>
+            <input type="tel" required placeholder="+251 9... / 09..." style="width: 100%; box-sizing: border-box; padding: 12px 16px; border-radius: 12px; border: 1px solid #b5c3b4; background: #fff; font-family: inherit; font-size: 14px; color: #153e35;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 700; color: #153e35; margin-bottom: 6px; text-transform: uppercase;">Preferred Language(s)</label>
+            <select style="width: 100%; box-sizing: border-box; padding: 12px 16px; border-radius: 12px; border: 1px solid #b5c3b4; background: #fff; font-family: inherit; font-size: 14px; color: #153e35;">
+              <option>Amharic (አማርኛ) & English</option>
+              <option>Amharic, Afaan Oromoo & English</option>
+              <option>Amharic only</option>
+              <option>English only</option>
+            </select>
+          </div>
+          <button type="submit" style="margin-top: 8px; padding: 16px; border-radius: 999px; background: #153e35; color: #dfff8b; border: none; font-family: inherit; font-weight: 800; font-size: 16px; cursor: pointer; transition: transform 160ms ease;">
+            Schedule Free Pilot in ETB
+          </button>
+        </form>
+        <div id="demo-success" style="display: none; text-align: center; padding: 24px 0;">
+          <div style="font-size: 40px; margin-bottom: 12px;">✅</div>
+          <h4 style="font-family: 'Instrument Serif', serif; font-size: 28px; margin: 0 0 8px 0; color: #153e35;">ቀጠሮዎ ተይዟል! (Booked!)</h4>
+          <p style="font-size: 14px; color: #587064; margin: 0;">Our Addis Ababa team will call your +251 number within 2 hours with your custom test line.</p>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    const closeBtn = modal.querySelector('#close-modal-btn');
+    closeBtn.addEventListener('click', () => { modal.style.display = 'none'; });
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.style.display = 'none';
+    });
+
+    const form = modal.querySelector('#demo-form');
+    const successDiv = modal.querySelector('#demo-success');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      form.style.display = 'none';
+      successDiv.style.display = 'block';
+      playTone(880, 0.3, 'sine', 0.05);
+      setTimeout(() => {
+        modal.style.display = 'none';
+        form.reset();
+        form.style.display = 'flex';
+        successDiv.style.display = 'none';
+      }, 4000);
+    });
+  }
+
+  createDemoModal();
+
+  // 6. Smooth Anchor Scrolling & Modal Trigger
   document.querySelectorAll('a[href^="#"], a[href="/#"], a[href="/book-a-demo"]').forEach((anchor) => {
     anchor.addEventListener('click', (e) => {
       const href = anchor.getAttribute('href');
       if (href === '/book-a-demo' || href === '#book-a-demo') {
         e.preventDefault();
-        const contactSection = document.querySelector('section[data-framer-name="Closing invitation"]') ||
-                               document.querySelector('section[data-framer-name="FAQ"]');
-        if (contactSection) {
-          contactSection.scrollIntoView({ behavior: 'smooth' });
+        const modal = document.getElementById('zion-demo-modal');
+        if (modal) {
+          modal.style.display = 'flex';
         }
       } else if (href && href.startsWith('#') && href.length > 1) {
         const target = document.querySelector(href);
@@ -225,12 +382,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 5. Sticky header enhancement
+  // 7. Sticky header shadow enhancement
   const navbar = document.querySelector('.framer-1tcgtph-container');
   if (navbar) {
     window.addEventListener('scroll', () => {
       if (window.scrollY > 20) {
-        navbar.style.boxShadow = '0 10px 30px -10px rgba(0, 0, 0, 0.05)';
+        navbar.style.boxShadow = '0 10px 30px -10px rgba(21, 62, 53, 0.08)';
         navbar.style.transition = 'box-shadow 200ms ease';
       } else {
         navbar.style.boxShadow = 'none';
