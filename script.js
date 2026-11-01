@@ -282,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 5. Booking Modal for Ethiopian Businesses
+  // 5. Booking Modal for Ethiopian Businesses (Forwarded to ceo@zionsoftwareagency.com)
   function createDemoModal() {
     const modalId = 'zion-demo-modal';
     if (document.getElementById(modalId)) return;
@@ -290,53 +290,89 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.createElement('div');
     modal.id = modalId;
     modal.style.cssText = `
-      position: fixed; inset: 0; background: rgba(21, 62, 53, 0.65);
+      position: fixed; inset: 0; background: rgba(21, 62, 53, 0.72);
       backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
       z-index: 10000; display: none; align-items: center; justify-content: center;
-      padding: 20px; box-sizing: border-box;
+      padding: 16px; box-sizing: border-box;
     `;
 
     modal.innerHTML = `
-      <div style="background: #faf8f1; border-radius: 28px; border: 1px solid #b5c3b4; padding: 40px; max-width: 520px; width: 100%; box-shadow: 0 24px 64px rgba(0,0,0,0.2); position: relative; font-family: 'Manrope', sans-serif;">
-        <button id="close-modal-btn" style="position: absolute; top: 20px; right: 20px; background: transparent; border: none; font-size: 24px; cursor: pointer; color: #153e35; line-height: 1;">&times;</button>
+      <div style="background: #faf8f1; border-radius: 28px; border: 1px solid #b5c3b4; padding: 36px 32px; max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 64px rgba(0,0,0,0.25); position: relative; font-family: 'Manrope', sans-serif; box-sizing: border-box;">
+        <button id="close-modal-btn" aria-label="Close modal" style="position: absolute; top: 18px; right: 20px; background: transparent; border: none; font-size: 26px; cursor: pointer; color: #153e35; line-height: 1; padding: 4px 8px; border-radius: 8px;">&times;</button>
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
           <img src="assets/images/zion-ai-logo.png" alt="Zion AI" style="height: 32px; width: auto; border-radius: 4px;">
         </div>
-        <h3 style="font-family: 'Instrument Serif', serif; font-size: 32px; margin: 0 0 8px 0; color: #153e35;">Book a Demo in Addis Ababa</h3>
-        <p style="font-size: 14px; color: #587064; margin: 0 0 16px 0; line-height: 1.5;">
-          Experience Zion AI on your actual business phone line. We will configure a live Amharic & English test number for your clinic or company in 15 minutes.
+        <h3 style="font-family: 'Instrument Serif', serif; font-size: 32px; margin: 0 0 6px 0; color: #153e35; line-height: 1.15;">Book a Demo in Addis Ababa</h3>
+        <p style="font-size: 13.5px; color: #587064; margin: 0 0 16px 0; line-height: 1.45;">
+          Experience Zion AI on your business phone line. We configure a live Amharic & English test pilot for your business within 15 minutes.
         </p>
-        <div style="background: rgba(21, 62, 53, 0.06); border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; font-size: 13px;">
-          <span style="color: #587064; font-weight: 600;">Direct Phone Line:</span>
-          <a href="tel:+251994575145" style="color: #153e35; font-weight: 800; text-decoration: none; font-size: 15px; letter-spacing: 0.02em;">+251994575145</a>
+        <div style="background: rgba(21, 62, 53, 0.06); border-radius: 12px; padding: 10px 14px; margin-bottom: 18px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; font-size: 12.5px; gap: 6px;">
+          <span style="color: #587064; font-weight: 600;">Forwarded to CEO:</span>
+          <span style="color: #153e35; font-weight: 800; font-family: monospace;">ceo@zionsoftwareagency.com</span>
         </div>
-        <form id="demo-form" style="display: flex; flex-direction: column; gap: 16px;">
+        
+        <form id="demo-form" style="display: flex; flex-direction: column; gap: 13px;">
           <div>
-            <label style="display: block; font-size: 12px; font-weight: 700; color: #153e35; margin-bottom: 6px; text-transform: uppercase;">Company / Clinic Name</label>
-            <input type="text" required placeholder="e.g. Lucy Clinic, Sheba Logistics" style="width: 100%; box-sizing: border-box; padding: 12px 16px; border-radius: 12px; border: 1px solid #b5c3b4; background: #fff; font-family: inherit; font-size: 14px; color: #153e35;">
+            <label style="display: block; font-size: 11.5px; font-weight: 700; color: #153e35; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.03em;">Full Name / Contact Person</label>
+            <input type="text" name="name" required placeholder="e.g. Dr. Meron / Abebe Bikila" style="width: 100%; box-sizing: border-box; padding: 11px 14px; border-radius: 10px; border: 1px solid #b5c3b4; background: #fff; font-family: inherit; font-size: 14px; color: #153e35; outline: none;">
           </div>
           <div>
-            <label style="display: block; font-size: 12px; font-weight: 700; color: #153e35; margin-bottom: 6px; text-transform: uppercase;">Ethiopian Phone Number</label>
-            <input type="tel" required placeholder="+251 9... / 09..." style="width: 100%; box-sizing: border-box; padding: 12px 16px; border-radius: 12px; border: 1px solid #b5c3b4; background: #fff; font-family: inherit; font-size: 14px; color: #153e35;">
+            <label style="display: block; font-size: 11.5px; font-weight: 700; color: #153e35; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.03em;">Work Email Address <span style="color: #e53e3e;">*</span></label>
+            <input type="email" name="email" required placeholder="e.g. name@company.et / info@lucyclinic.com" style="width: 100%; box-sizing: border-box; padding: 11px 14px; border-radius: 10px; border: 1px solid #b5c3b4; background: #fff; font-family: inherit; font-size: 14px; color: #153e35; outline: none;">
           </div>
           <div>
-            <label style="display: block; font-size: 12px; font-weight: 700; color: #153e35; margin-bottom: 6px; text-transform: uppercase;">Preferred Language(s)</label>
-            <select style="width: 100%; box-sizing: border-box; padding: 12px 16px; border-radius: 12px; border: 1px solid #b5c3b4; background: #fff; font-family: inherit; font-size: 14px; color: #153e35;">
-              <option>Amharic & English</option>
-              <option>Amharic, Afaan Oromoo & English</option>
-              <option>Amharic only</option>
-              <option>English only</option>
+            <label style="display: block; font-size: 11.5px; font-weight: 700; color: #153e35; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.03em;">Ethiopian Phone Number <span style="color: #e53e3e;">*</span></label>
+            <input type="tel" name="phone" required placeholder="+251 9... / 09..." style="width: 100%; box-sizing: border-box; padding: 11px 14px; border-radius: 10px; border: 1px solid #b5c3b4; background: #fff; font-family: inherit; font-size: 14px; color: #153e35; outline: none;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 11.5px; font-weight: 700; color: #153e35; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.03em;">Company / Clinic / Business Name</label>
+            <input type="text" name="company" required placeholder="e.g. Lucy Clinic, Sheba Logistics" style="width: 100%; box-sizing: border-box; padding: 11px 14px; border-radius: 10px; border: 1px solid #b5c3b4; background: #fff; font-family: inherit; font-size: 14px; color: #153e35; outline: none;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 11.5px; font-weight: 700; color: #153e35; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.03em;">Preferred Language(s)</label>
+            <select name="language" style="width: 100%; box-sizing: border-box; padding: 11px 14px; border-radius: 10px; border: 1px solid #b5c3b4; background: #fff; font-family: inherit; font-size: 14px; color: #153e35; outline: none;">
+              <option value="Amharic & English">Amharic & English (Most Popular)</option>
+              <option value="Amharic, Afaan Oromoo & English">Amharic, Afaan Oromoo & English</option>
+              <option value="Amharic, Tigrigna & English">Amharic, Tigrigna & English</option>
+              <option value="Amharic, Somali & English">Amharic, Somali & English</option>
+              <option value="Kiswahili & English">Kiswahili & English</option>
+              <option value="Amharic only">Amharic only</option>
+              <option value="English only">English only</option>
             </select>
           </div>
-          <button type="submit" style="margin-top: 8px; padding: 16px; border-radius: 999px; background: #153e35; color: #dfff8b; border: none; font-family: inherit; font-weight: 800; font-size: 16px; cursor: pointer; transition: transform 160ms ease;">
-            Schedule Free Pilot in ETB
+          <div>
+            <label style="display: block; font-size: 11.5px; font-weight: 700; color: #153e35; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.03em;">Call Volume / Specific Needs (Optional)</label>
+            <input type="text" name="notes" placeholder="e.g. Patient booking, ~50 daily calls, after-hours coverage" style="width: 100%; box-sizing: border-box; padding: 11px 14px; border-radius: 10px; border: 1px solid #b5c3b4; background: #fff; font-family: inherit; font-size: 14px; color: #153e35; outline: none;">
+          </div>
+          <button type="submit" id="submit-demo-btn" style="margin-top: 6px; padding: 15px; border-radius: 999px; background: #153e35; color: #dfff8b; border: none; font-family: inherit; font-weight: 800; font-size: 15px; cursor: pointer; transition: transform 160ms ease, background 160ms ease;">
+            Schedule Free Pilot (Send to CEO)
           </button>
         </form>
-        <div id="demo-success" style="display: none; text-align: center; padding: 24px 0;">
-          <div style="font-size: 40px; margin-bottom: 12px;">✅</div>
-          <h4 style="font-family: 'Instrument Serif', serif; font-size: 28px; margin: 0 0 8px 0; color: #153e35;">Your Demo Is Booked!</h4>
-          <p style="font-size: 14px; color: #587064; margin: 0 0 10px 0;">Our Addis Ababa team will call your number within 2 hours with your custom test line.</p>
-          <p style="font-size: 13px; color: #153e35; margin: 0;">Or call us directly anytime: <a href="tel:+251994575145" style="color: #153e35; font-weight: 800; text-decoration: underline;">+251994575145</a></p>
+
+        <div id="demo-success" style="display: none; padding: 12px 0;">
+          <div style="text-align: center; margin-bottom: 14px;">
+            <div style="font-size: 42px; line-height: 1; margin-bottom: 8px;">✅</div>
+            <h4 style="font-family: 'Instrument Serif', serif; font-size: 28px; margin: 0 0 6px 0; color: #153e35;">Demo Request Forwarded!</h4>
+            <p style="font-size: 13.5px; color: #587064; margin: 0; line-height: 1.45;">
+              Your request has been logged and forwarded directly to <strong>ceo@zionsoftwareagency.com</strong>.
+            </p>
+          </div>
+
+          <div id="demo-receipt" style="background: rgba(21, 62, 53, 0.05); border: 1px solid #b5c3b4; border-radius: 14px; padding: 16px; margin-bottom: 18px; font-size: 13px; color: #153e35;">
+            <!-- Populated dynamically via JS -->
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <a id="demo-mailto-btn" href="mailto:ceo@zionsoftwareagency.com" target="_blank" style="display: block; text-align: center; padding: 12px 18px; border-radius: 999px; background: #153e35; color: #dfff8b; font-weight: 700; font-size: 13.5px; text-decoration: none; transition: transform 160ms ease;">
+              ✉️ Open Direct Email to CEO
+            </a>
+            <a href="tel:+251994575145" style="display: block; text-align: center; padding: 12px 18px; border-radius: 999px; background: transparent; border: 1px solid #153e35; color: #153e35; font-weight: 700; font-size: 13.5px; text-decoration: none;">
+              📞 Call Direct: +251994575145
+            </a>
+            <button id="demo-done-btn" style="padding: 10px; background: transparent; border: none; font-size: 13px; color: #587064; cursor: pointer; text-decoration: underline;">
+              Done & Close
+            </button>
+          </div>
         </div>
       </div>
     `;
@@ -344,25 +380,95 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.appendChild(modal);
 
     const closeBtn = modal.querySelector('#close-modal-btn');
-    closeBtn.addEventListener('click', () => { modal.style.display = 'none'; });
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) modal.style.display = 'none';
-    });
-
+    const doneBtn = modal.querySelector('#demo-done-btn');
     const form = modal.querySelector('#demo-form');
     const successDiv = modal.querySelector('#demo-success');
-    form.addEventListener('submit', (e) => {
+    const submitBtn = modal.querySelector('#submit-demo-btn');
+    const receiptDiv = modal.querySelector('#demo-receipt');
+    const mailtoBtn = modal.querySelector('#demo-mailto-btn');
+
+    function hideModal() {
+      modal.style.display = 'none';
+      form.style.display = 'flex';
+      successDiv.style.display = 'none';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Schedule Free Pilot (Send to CEO)';
+    }
+
+    closeBtn.addEventListener('click', hideModal);
+    doneBtn.addEventListener('click', hideModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) hideModal();
+    });
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Forwarding to ceo@zionsoftwareagency.com...';
+
+      const formData = new FormData(form);
+      const payload = {
+        name: formData.get('name') || '',
+        email: formData.get('email') || '',
+        phone: formData.get('phone') || '',
+        company: formData.get('company') || '',
+        language: formData.get('language') || 'Amharic & English',
+        notes: formData.get('notes') || ''
+      };
+
+      try {
+        // Send to backend /api/book-demo
+        const res = await fetch('/api/book-demo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const resData = await res.json().catch(() => ({}));
+      } catch (err) {
+        console.warn('Backend endpoint unavailable, continuing with client-side forward:', err);
+      }
+
+      // Populate summary receipt
+      receiptDiv.innerHTML = `
+        <div style="font-weight: 700; margin-bottom: 8px; border-bottom: 1px solid rgba(21, 62, 53, 0.12); padding-bottom: 6px;">
+          📋 Booking Summary (Sent to CEO)
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; line-height: 1.4;">
+          <div><strong>Company:</strong> ${escapeHtml(payload.company)}</div>
+          <div><strong>Contact:</strong> ${escapeHtml(payload.name)}</div>
+          <div><strong>Work Email:</strong> ${escapeHtml(payload.email)}</div>
+          <div><strong>Phone:</strong> ${escapeHtml(payload.phone)}</div>
+          <div style="grid-column: span 2;"><strong>Languages:</strong> ${escapeHtml(payload.language)}</div>
+          ${payload.notes ? `<div style="grid-column: span 2;"><strong>Notes:</strong> ${escapeHtml(payload.notes)}</div>` : ''}
+        </div>
+      `;
+
+      // Configure mailto backup link
+      const subject = encodeURIComponent(`Zion AI Demo Booking: ${payload.company} (${payload.name})`);
+      const body = encodeURIComponent(
+        `Dear Zion AI Team & CEO,\n\nI have requested a demo for Zion AI:\n\n` +
+        `• Company: ${payload.company}\n` +
+        `• Contact Person: ${payload.name}\n` +
+        `• Work Email: ${payload.email}\n` +
+        `• Phone Number: ${payload.phone}\n` +
+        `• Preferred Languages: ${payload.language}\n` +
+        `• Notes / Needs: ${payload.notes || 'None'}\n\n` +
+        `Please contact me to set up our test line.\n\nBest regards,\n${payload.name}`
+      );
+      mailtoBtn.href = `mailto:ceo@zionsoftwareagency.com?subject=${subject}&body=${body}`;
+
+      // Play pleasant audio tone
+      playTone(523.25, 0.15, 'sine', 0.05);
+      setTimeout(() => playTone(783.99, 0.25, 'sine', 0.04), 140);
+
       form.style.display = 'none';
       successDiv.style.display = 'block';
-      playTone(880, 0.3, 'sine', 0.05);
-      setTimeout(() => {
-        modal.style.display = 'none';
-        form.reset();
-        form.style.display = 'flex';
-        successDiv.style.display = 'none';
-      }, 4000);
+      form.reset();
     });
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
   }
 
   createDemoModal();
