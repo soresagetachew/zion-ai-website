@@ -45,9 +45,9 @@
 
 2. **Start the local server:**
    ```bash
-   node server.js
-   # or
    npm start
+   # or
+   node dev-server.js
    ```
 
 3. **Open in browser:**
