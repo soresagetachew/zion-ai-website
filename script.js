@@ -399,4 +399,83 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // 8. Ethiopian Languages Switcher Interactivity
+  const langGreetings = {
+    'Amharic': { greeting: 'Selam. How can I assist your business today?', audioGreeting: 'Selam, welcome to Zion AI.' },
+    'Afaan Oromoo': { greeting: 'Akkam. Akkamitti isin gargaaruu dandeenya?', audioGreeting: 'Akkam, welcome to Zion AI.' },
+    'Tigrigna': { greeting: 'Selam. Blemante kirekibkum yikeal?', audioGreeting: 'Selam, welcome to Zion AI.' },
+    'Kiswahili': { greeting: 'Hujambo. Karibu huduma ya Zion AI leo.', audioGreeting: 'Hujambo, welcome to Zion AI.' },
+    'Somali': { greeting: 'Iska warran. Sideen kuu caawin karnaa maanta?', audioGreeting: 'Iska warran, welcome to Zion AI.' }
+  };
+
+  const langCards = document.querySelectorAll('.language-card-wrapper button, .framer-1696wy9 button');
+  const greetingHeading = document.querySelector('.framer-o3jxdy .framer-bi4mxk h2');
+  const greetingPlayerPlayBtn = document.querySelector('.framer-6gvd4r-container button[aria-label="Play call"], .framer-6gvd4r-container button[title="Play call"]');
+
+  langCards.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const langName = btn.getAttribute('name');
+
+      // Update active state on buttons
+      langCards.forEach((b) => {
+        b.setAttribute('data-framer-name', 'Default');
+        b.classList.remove('framer-v-1s9uwig');
+        b.classList.add('framer-v-osnoto');
+        b.style.setProperty('--border-color', 'rgba(223, 255, 139, 0)');
+        b.style.backgroundColor = 'rgba(250, 248, 241, 0.08)';
+        const playingSvg = b.querySelector('svg[data-framer-name="Playing"]');
+        if (playingSvg) playingSvg.style.opacity = '0';
+      });
+
+      btn.setAttribute('data-framer-name', 'Selected');
+      btn.classList.remove('framer-v-osnoto');
+      btn.classList.add('framer-v-1s9uwig');
+      btn.style.setProperty('--border-color', 'rgba(223, 255, 139, 0.7)');
+      btn.style.backgroundColor = 'rgba(223, 255, 139, 0.12)';
+      const activeSvg = btn.querySelector('svg[data-framer-name="Playing"]');
+      if (activeSvg) activeSvg.style.opacity = '1';
+
+      // Update heading text with gentle fade transition
+      if (greetingHeading && langGreetings[langName]) {
+        greetingHeading.style.opacity = '0';
+        greetingHeading.style.transition = 'opacity 150ms ease';
+        setTimeout(() => {
+          greetingHeading.textContent = `“${langGreetings[langName].greeting}”`;
+          greetingHeading.style.opacity = '1';
+        }, 150);
+      }
+
+      // Pleasant tone chime
+      playTone(587.33, 0.15, 'sine', 0.04);
+      setTimeout(() => playTone(880, 0.25, 'sine', 0.03), 120);
+
+      // Web speech synthesis if available
+      try {
+        if ('speechSynthesis' in window && langGreetings[langName]) {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(langGreetings[langName].audioGreeting);
+          utter.rate = 1.0;
+          window.speechSynthesis.speak(utter);
+        }
+      } catch (err) {}
+    });
+  });
+
+  // Also wire the Greeting player play button to trigger speech synthesis / chime
+  if (greetingPlayerPlayBtn) {
+    greetingPlayerPlayBtn.addEventListener('click', () => {
+      playTone(659.25, 0.18, 'sine', 0.05);
+      setTimeout(() => playTone(987.77, 0.3, 'sine', 0.04), 140);
+      const activeLangBtn = document.querySelector('.language-card-wrapper button[data-framer-name="Selected"]');
+      const activeLang = activeLangBtn ? activeLangBtn.getAttribute('name') : 'Amharic';
+      if ('speechSynthesis' in window && langGreetings[activeLang]) {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(langGreetings[activeLang].audioGreeting);
+        utter.rate = 1.0;
+        window.speechSynthesis.speak(utter);
+      }
+    });
+  }
 });
