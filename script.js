@@ -318,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div>
             <label style="display: block; font-size: 12px; font-weight: 700; color: #153e35; margin-bottom: 6px; text-transform: uppercase;">Preferred Language(s)</label>
             <select style="width: 100%; box-sizing: border-box; padding: 12px 16px; border-radius: 12px; border: 1px solid #b5c3b4; background: #fff; font-family: inherit; font-size: 14px; color: #153e35;">
-              <option>Amharic (አማርኛ) & English</option>
+              <option>Amharic & English</option>
               <option>Amharic, Afaan Oromoo & English</option>
               <option>Amharic only</option>
               <option>English only</option>
@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </form>
         <div id="demo-success" style="display: none; text-align: center; padding: 24px 0;">
           <div style="font-size: 40px; margin-bottom: 12px;">✅</div>
-          <h4 style="font-family: 'Instrument Serif', serif; font-size: 28px; margin: 0 0 8px 0; color: #153e35;">ቀጠሮዎ ተይዟል! (Booked!)</h4>
+          <h4 style="font-family: 'Instrument Serif', serif; font-size: 28px; margin: 0 0 8px 0; color: #153e35;">Your Demo Is Booked!</h4>
           <p style="font-size: 14px; color: #587064; margin: 0;">Our Addis Ababa team will call your +251 number within 2 hours with your custom test line.</p>
         </div>
       </div>
