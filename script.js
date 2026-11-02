@@ -1,6 +1,9 @@
 // Zion AI - Interactive Enhancements & Audio Simulation
 
-document.addEventListener('DOMContentLoaded', () => {
+function initZionAI() {
+  if (typeof window === 'undefined') return;
+  if (window.__zionAiInitialized) return;
+  window.__zionAiInitialized = true;
   // 1. FAQ Accordion Toggle
   const faqButtons = document.querySelectorAll('button[name="Question toggle"]');
   faqButtons.forEach((btn) => {
@@ -592,4 +595,20 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-});
+}
+
+if (typeof window !== 'undefined') {
+  window.initZionAI = initZionAI;
+}
+
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initZionAI);
+  } else {
+    initZionAI();
+  }
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { initZionAI };
+}

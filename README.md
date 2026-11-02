@@ -43,11 +43,12 @@
    cd zion-ai-website
    ```
 
-2. **Start the local server:**
+2. **Start the Next.js development server:**
    ```bash
+   npm run dev
+   # or build & start production:
+   npm run build
    npm start
-   # or
-   node dev-server.js
    ```
 
 3. **Open in browser:**
