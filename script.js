@@ -289,6 +289,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const modal = document.createElement('div');
     modal.id = modalId;
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'zion-modal-title');
     modal.style.cssText = `
       position: fixed; inset: 0; background: rgba(21, 62, 53, 0.72);
       backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -302,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
           <img src="assets/images/zion-ai-logo.png" alt="Zion AI" style="height: 32px; width: auto; border-radius: 4px;">
         </div>
-        <h3 style="font-family: 'Instrument Serif', serif; font-size: 32px; margin: 0 0 6px 0; color: #153e35; line-height: 1.15;">Book a Demo in Addis Ababa</h3>
+        <h3 id="zion-modal-title" style="font-family: 'Instrument Serif', serif; font-size: 32px; margin: 0 0 6px 0; color: #153e35; line-height: 1.15;">Book a Demo in Addis Ababa</h3>
         <p style="font-size: 13.5px; color: #587064; margin: 0 0 16px 0; line-height: 1.45;">
           Experience Zion AI on your business phone line. We configure a live Amharic & English test pilot for your business within 15 minutes.
         </p>
@@ -399,6 +402,11 @@ document.addEventListener('DOMContentLoaded', () => {
     doneBtn.addEventListener('click', hideModal);
     modal.addEventListener('click', (e) => {
       if (e.target === modal) hideModal();
+    });
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.style.display === 'flex') {
+        hideModal();
+      }
     });
 
     form.addEventListener('submit', async (e) => {

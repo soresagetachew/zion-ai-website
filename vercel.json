@@ -1,4 +1,11 @@
 {
   "version": 2,
-  "outputDirectory": "."
+  "functions": {
+    "server.js": {
+      "includeFiles": "assets/**,styles.css,script.js,index.html,image.png"
+    },
+    "index.js": {
+      "includeFiles": "assets/**,styles.css,script.js,index.html,image.png"
+    }
+  }
 }
