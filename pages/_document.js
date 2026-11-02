@@ -23,9 +23,25 @@ export default function Document() {
           body {
             margin: 0;
             padding: 0;
-            background-color: #faf8f1;
+            background-color: #f3f0e8;
             color: #153e35;
             font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          }
+          :root, html, body {
+            background-color: var(--token-f91f33df-c8d5-4285-a201-02af5b6cdd09, #f3f0e8) !important;
+          }
+          /* Framer responsive breakpoint display toggles */
+          @media (min-width: 1200px) {
+            .hidden-72rtr7 { display: none !important; }
+            .hidden-1p6qhkg { display: none !important; }
+          }
+          @media (min-width: 810px) and (max-width: 1199.98px) {
+            .hidden-1rt0tzb { display: none !important; }
+            .hidden-ssukci { display: none !important; }
+          }
+          @media (max-width: 809.98px) {
+            .hidden-px3ivx { display: none !important; }
+            .hidden-jetl97 { display: none !important; }
           }
           :focus-visible {
             outline: 2px solid #153e35 !important;

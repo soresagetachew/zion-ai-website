@@ -14,6 +14,7 @@ export default function Home({ bodyContent }) {
     <>
       <div
         id="zion-root-content"
+        style={{ display: 'contents' }}
         dangerouslySetInnerHTML={{ __html: bodyContent }}
       />
       <Script

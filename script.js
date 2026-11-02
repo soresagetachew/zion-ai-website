@@ -59,55 +59,46 @@ function initZionAI() {
     });
   });
 
-  // 2. Sound generation using Web Audio API for interactive audio playback
-  let audioCtx = null;
-  function getAudioContext() {
-    if (!audioCtx) {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      if (AudioContext) audioCtx = new AudioContext();
-    }
-    if (audioCtx && audioCtx.state === 'suspended') {
-      audioCtx.resume();
-    }
-    return audioCtx;
-  }
-
-  function playTone(freq, duration, type = 'sine', gainVal = 0.04) {
-    try {
-      const ctx = getAudioContext();
-      if (!ctx) return;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = type;
-      osc.frequency.setValueAtTime(freq, ctx.currentTime);
-      gain.gain.setValueAtTime(gainVal, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + duration);
-    } catch (e) {
-      // Audio autoplay policy fallback
-    }
-  }
-
-  // 3. Call Players Simulation
-  let currentlyPlaying = null;
+  // 2. Real Audio Playback for Call Players & Voice Samples
+  let activeAudio = null;
+  let activePlayerStop = null;
 
   const playSvg = `<svg width="23.52" height="23.52" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.52.85l10.4-6.5a1 1 0 0 0 0-1.7L9.52 4.65A1 1 0 0 0 8 5.5Z" fill="currentColor"></path></svg>`;
   const pauseSvg = `<svg width="23.52" height="23.52" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"></rect><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"></rect></svg>`;
 
-  const players = document.querySelectorAll('.framer-1ifyrsq-container, .framer-1sa6knb-container');
+  function getAudioSource(element) {
+    const parentCard = element.closest('[data-framer-name], section, article, div') || element;
+    const text = (parentCard.innerText || parentCard.textContent || '').toLowerCase();
+    
+    if (text.includes('lucy medical') || text.includes('doctor') || text.includes('consultation')) {
+      return '/assets/audio/call-doctor.mp3';
+    } else if (text.includes('telebirr') || text.includes('tracking') || text.includes('order')) {
+      return '/assets/audio/call-team.mp3';
+    } else if (text.includes('opening') || text.includes('after-hours') || text.includes('closed') || text.includes('hotel')) {
+      return '/assets/audio/call-after-hours.mp3';
+    } else if (text.includes('cancel') || text.includes('rebook')) {
+      return '/assets/audio/call-cancel.mp3';
+    } else if (text.includes('human') || text.includes('right person') || text.includes('team')) {
+      return '/assets/audio/call-team.mp3';
+    } else if (text.includes('waveform') || text.includes('greeting') || text.includes('welcome') || text.includes('languages')) {
+      return '/assets/audio/call-hero.mp3';
+    }
+    return '/assets/audio/call-doctor.mp3';
+  }
+
+  const players = document.querySelectorAll('.framer-1ifyrsq-container, .framer-1sa6knb-container, .framer-6gvd4r-container');
 
   players.forEach((player) => {
     const playBtn = player.querySelector('button[title="Play call"], button[aria-label="Play call"]');
     if (!playBtn) return;
 
+    const audioSrc = getAudioSource(player);
+    const audio = new Audio(audioSrc);
+    audio.preload = 'metadata';
+
     const slider = player.querySelector('[role="slider"]');
-    const totalDuration = slider ? parseFloat(slider.getAttribute('aria-valuemax') || '30') : 30;
-    let currentTime = 0;
+    let totalDuration = slider ? parseFloat(slider.getAttribute('aria-valuemax') || '30') : 30;
     let isPlaying = false;
-    let timerId = null;
     let playbackSpeed = 1.0;
 
     // Time label & progress bar
@@ -118,28 +109,39 @@ function initZionAI() {
     const transcriptItems = player.querySelectorAll('[role="log"] > div, [aria-live="polite"] > div');
 
     function formatTime(sec) {
+      if (isNaN(sec) || !isFinite(sec)) sec = 0;
       const m = Math.floor(sec / 60);
       const s = Math.floor(sec % 60);
       return `${m}:${s < 10 ? '0' : ''}${s}`;
     }
 
-    function updateUI() {
-      if (timeLabel) {
-        timeLabel.textContent = `${formatTime(currentTime)} / ${formatTime(totalDuration)}`;
+    audio.addEventListener('loadedmetadata', () => {
+      if (audio.duration && !isNaN(audio.duration) && isFinite(audio.duration)) {
+        totalDuration = audio.duration;
+        if (slider) slider.setAttribute('aria-valuemax', Math.round(totalDuration).toString());
+        if (timeLabel) timeLabel.textContent = `${formatTime(audio.currentTime)} / ${formatTime(totalDuration)}`;
       }
-      const pct = (currentTime / totalDuration) * 100;
+    });
+
+    function updateUI() {
+      const cur = audio.currentTime || 0;
+      const dur = (audio.duration && !isNaN(audio.duration) && isFinite(audio.duration)) ? audio.duration : totalDuration;
+      if (timeLabel) {
+        timeLabel.textContent = `${formatTime(cur)} / ${formatTime(dur)}`;
+      }
+      const pct = Math.min(100, Math.max(0, (cur / dur) * 100));
       if (progressBar) {
         progressBar.style.width = `${pct}%`;
       }
       if (slider) {
-        slider.setAttribute('aria-valuenow', Math.floor(currentTime).toString());
-        slider.setAttribute('aria-valuetext', `${formatTime(currentTime)} of ${formatTime(totalDuration)}`);
+        slider.setAttribute('aria-valuenow', Math.floor(cur).toString());
+        slider.setAttribute('aria-valuetext', `${formatTime(cur)} of ${formatTime(dur)}`);
       }
 
       // Highlight active speaker transcript row
       if (transcriptItems.length > 1) {
-        const midPoint = totalDuration / 2;
-        if (currentTime < midPoint) {
+        const midPoint = dur / 2;
+        if (cur < midPoint) {
           transcriptItems[0].style.opacity = '1';
           transcriptItems[0].style.transform = 'scale(1.01)';
           transcriptItems[0].style.transition = 'all 200ms ease';
@@ -159,55 +161,41 @@ function initZionAI() {
       }
     }
 
+    audio.addEventListener('timeupdate', updateUI);
+
     function stop() {
       isPlaying = false;
-      clearInterval(timerId);
-      timerId = null;
+      audio.pause();
       playBtn.innerHTML = playSvg;
       playBtn.setAttribute('aria-label', 'Play call');
       playBtn.setAttribute('title', 'Play call');
-      if (currentlyPlaying === stop) currentlyPlaying = null;
-      if (window.speechSynthesis) window.speechSynthesis.cancel();
+      if (activePlayerStop === stop) {
+        activePlayerStop = null;
+        activeAudio = null;
+      }
     }
 
+    audio.addEventListener('ended', () => {
+      stop();
+      audio.currentTime = 0;
+      updateUI();
+    });
+
     function start() {
-      if (currentlyPlaying && currentlyPlaying !== stop) {
-        currentlyPlaying();
+      if (activePlayerStop && activePlayerStop !== stop) {
+        activePlayerStop();
       }
-      currentlyPlaying = stop;
+      activePlayerStop = stop;
+      activeAudio = audio;
       isPlaying = true;
+      audio.playbackRate = playbackSpeed;
       playBtn.innerHTML = pauseSvg;
       playBtn.setAttribute('aria-label', 'Pause call');
       playBtn.setAttribute('title', 'Pause call');
 
-      // Play soft initial telephone chime
-      playTone(440, 0.15, 'sine', 0.05);
-      setTimeout(() => playTone(880, 0.25, 'sine', 0.04), 160);
-
-      // Attempt speech synthesis for transcript dialogue if available
-      try {
-        if ('speechSynthesis' in window && transcriptItems.length > 0) {
-          window.speechSynthesis.cancel();
-          const firstSpeakerText = transcriptItems[0].innerText || transcriptItems[0].textContent;
-          if (firstSpeakerText) {
-            const utter = new SpeechSynthesisUtterance(firstSpeakerText.replace(/Zion AI|CallWave/gi, 'Zion AI'));
-            utter.rate = 0.95 * playbackSpeed;
-            window.speechSynthesis.speak(utter);
-          }
-        }
-      } catch (e) {}
-
-      const intervalMs = 100;
-      timerId = setInterval(() => {
-        currentTime += (intervalMs / 1000) * playbackSpeed;
-        if (currentTime >= totalDuration) {
-          currentTime = 0;
-          updateUI();
-          stop();
-        } else {
-          updateUI();
-        }
-      }, intervalMs);
+      audio.play().catch(() => {
+        // Autoplay policy or error fallback
+      });
     }
 
     playBtn.addEventListener('click', (e) => {
@@ -225,9 +213,9 @@ function initZionAI() {
         const rect = slider.getBoundingClientRect();
         const clickX = e.clientX - rect.left;
         const ratio = Math.max(0, Math.min(1, clickX / rect.width));
-        currentTime = ratio * totalDuration;
+        const dur = (audio.duration && !isNaN(audio.duration) && isFinite(audio.duration)) ? audio.duration : totalDuration;
+        audio.currentTime = ratio * dur;
         updateUI();
-        playTone(520, 0.08, 'triangle', 0.03);
       });
     }
 
@@ -239,9 +227,9 @@ function initZionAI() {
         else if (playbackSpeed === 1.5) playbackSpeed = 2.0;
         else playbackSpeed = 1.0;
 
+        audio.playbackRate = playbackSpeed;
         speedBtn.textContent = `${playbackSpeed}×`;
         speedBtn.setAttribute('aria-label', `Playback speed ${playbackSpeed}×`);
-        playTone(660, 0.06, 'sine', 0.03);
       });
     }
   });
